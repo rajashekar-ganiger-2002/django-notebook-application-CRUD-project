@@ -1,0 +1,243 @@
+{%extends 'home.html'%}
+
+{%block mainblk%}
+{%load tags%}
+
+    <div class="container-fluid h-100 ">
+        <div class="row" style="height:100px">
+            <div class="col-12">
+                                            <!--notebook navigation bar -->
+                <nav class="navbar navbar-expand-lg justify-content-between navbar-light bg-black">
+                    <a class="navbar-brand text-white" href="#">{{count}} Notebook</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                  
+                    
+                      <form class="form-inline my-2 my-lg-0 float-right" action="{%url 'notebook'%}" method="POST">
+                        {%csrf_token%}
+                        
+                        <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0"  type="submit">Search</button>
+                      </form>
+                    
+                    </div>
+                  </nav>
+
+                                        <!-- add new notebook btn -->
+
+           
+    <div class="col">
+
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle float-left ml-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fa fa-filter"></span>filter
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/sort/A-Z">A-Z</a>
+                        <a class="dropdown-item" href="/sort/Z-A">Z-A</a>
+                        <a class="dropdown-item" href="/sort/recentused">recent used</a>
+                        <a class="dropdown-item" href="/sort/createdon">created on</a>
+                      </div>
+                    </div>
+          
+                    <button type="button" class="btn btn-primary justify-content-between float-right mr-3" data-toggle="modal" data-target="#exampleModal">
+                        +new notebook
+                      </button>
+
+                 
+                      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title text-success" id="exampleModalLabel">+ new notebook</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              
+                              <form action="{% url 'add_notebook'%}" method="POST">
+                                {%csrf_token%}
+                                <div class="form-group" >
+                          
+                                  <label for="exampleInputEmail1">Notebook name</label>
+                                  <input type="text" name="notebook_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="notebook name">
+
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Add new notebook</button>
+                              </form>
+
+                            </div>
+                            <div class="modal-footer">
+   
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                                            <!-- share notebook btn-->
+                    <button type="button" class="btn btn-primary justify-content-between float-right mr-2" data-toggle="modal" data-target="#exampleModal2">
+                        share notebook
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="{%url 'share_notebook'%}" method="POST">
+                                {%csrf_token%}
+                                <div class="form-group">
+                                  <label for="exampleInputEmail1">Email address</label>
+                                  <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                </div>
+                                <div class="form-group">
+                                  
+                                  <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Notebook</label>
+                                    <select class="form-control" id="exampleFormControlSelect1" name="notebook">
+                                      {%for i in notebook%}
+                                      <option>{{i.book_name}}</option>
+                                      {%endfor%}
+                                    </select>
+                                  </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                              </form>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                      
+
+                    </div>
+               
+
+                  
+            </div>
+
+
+         <hr style="width:90%; background-color:white">
+
+         {%if sucess%}
+         <div class="alert alert-success w-100" role="alert">
+          Notebook added succesfully
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {%endif%}
+
+        {%if error %}
+        <div class="alert alert-danger w-100" role="alert">
+         Notebook already exist!
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+       </div>
+       {%endif%}
+      
+       {%if share_error%}
+       <div class="alert alert-danger w-100" role="alert" >
+        {{share_error}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+       {%endif%}
+
+
+      
+
+                    <!-- display notebook in table -->
+
+            <div class="container-fluid pl-0 pr-0" style="height:800px">
+              <div class="row h-100">
+                <div class="col">
+                  <table class="table table-striped table-dark mt-3">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">created on</th>
+                        <th scope="col">last modfied</th>
+                        <th scope="col">bookmark</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      
+                        {%for i in query%}
+                        <tr>
+                          <th scope="row" ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{forloop.counter}}</a></th>
+                          <td ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{i.book_name|tagmark:search}}</a></td>
+                          <td ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{i.book_created_on}}</a></td>
+                          <td ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{i.book_last_modified}}</a></td>
+
+
+                          {% if i.bookmark_notebook %}
+                          <td> <a href="/notebook/bookmark/{{i.notebook_slug}}"><span class="fa fa-star" style="color:rgb(27,226,107)"></span></a></td>
+                          {%else%}
+                          <td> <a href="/notebook/bookmark/{{i.notebook_slug}}"><span class="fa fa-star" style="color:rgb(233, 244, 238)"></span></a></td>
+                          {%endif%}
+                          <td><span class="badge badge-pill badge-primary">{{i.notebook_slug|countnotes:request.session.user}}</span></td> 
+
+                        {%empty%}
+                      </tr>
+                          {%for i in notebook%}
+                          <tr>
+                        <th scope="row" ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{forloop.counter}}</a></th>
+                        <td ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{i.book_name}}</a></td>
+                        <td ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{i.book_created_on}}</a></td>
+                        <td ><a href="/notes/{{i.notebook_slug}}" class="text-white">{{i.book_last_modified}}</a></td>
+                        {% if i.bookmark_notebook %}
+                        <td> <a href="/notebook/bookmark/{{i.notebook_slug}}"><span class="fa fa-star" style="color:rgb(27,226,107)"></span></a></td>
+                        {%else%}
+                        <td> <a href="/notebook/bookmark/{{i.notebook_slug}}"><span class="fa fa-star" style="color:rgb(233, 244, 238)"></span></a></td>
+                        {%endif%}
+                        <td><span class="badge badge-pill badge-primary">{{i.notebook_slug|countnotes:request.session.user}}</span></td> 
+                          {%endfor%}
+                        </tr>
+                       
+                      {%endfor%}
+
+                     
+                     
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+        
+          
+          
+
+
+        
+    
+  
+
+
+ 
+
+{%endblock%}

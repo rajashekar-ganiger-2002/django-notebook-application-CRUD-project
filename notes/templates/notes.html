@@ -1,0 +1,273 @@
+{%extends 'home.html'%}
+
+{%block mainblk%}
+{%load tags%}
+<div class="container-fluid h-100 pl-0 pr-0">
+    <div class="row h-100 border border-danger">
+        <div class="col-3 border border-success">
+
+            <header>
+                <h4 class="text-white">Notes..</h4>
+
+                                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success float-right " data-toggle="modal" data-target="#exampleModal">
+                        +new note
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                              <form action="{%url 'new_note'%}" method="POST">
+                                {%csrf_token%}
+                                <div class="form-group">
+                                  <label for="exampleInputEmail1">New note</label>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="note" placeholder="Enter new note name">
+                                  
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                              </form>
+
+
+                              
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+            </header>
+
+            <hr class="bg-white mt-5">
+
+            <div class="list ">
+
+              
+              {%for i in query%}
+
+
+                {%if i.notes_name == request.session.note%}
+
+                <div class="list-group-item list-group-item-action flex-column align-items-start active mb-3">
+                <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}}" style="text-decoration:none" class="text-dark">
+                  
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{i.notes_name|tagmark:search}}</h5>
+                    <small>{{i.notes_created_on}}</small>
+                  </div>
+                  <p class="mb-1">{{i.notes_text|truncatechars:80}}</p>
+                  <small>last modified : {{i.notes_last_modified}}</small>
+                </a>
+
+                {% if i.bookmark_notes %}
+                <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(27,226,107)"></span></a>
+                 {%else%}
+                 <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(23, 25, 24)"></span></a>
+                 {%endif%}
+                 
+
+              </div>
+                {%else%}
+
+                <div class="list-group-item list-group-item-action flex-column align-items-start mb-3 ">
+
+                <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}}" style="text-decoration:none" class="text-dark">
+                  
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{i.notes_name|tagmark:search}}</h5>
+                    <small>{{i.notes_created_on}}</small>
+                  </div>
+                  <p class="mb-1">{{i.notes_text|truncatechars:80}}</p>
+                  <small>last modified : {{i.notes_last_modified}}</small>
+
+                  
+
+                </a>
+                {% if i.bookmark_notes %}
+                <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(27,226,107)"></span></a>
+                 {%else%}
+                 <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(23, 25, 24)"></span></a>
+                 {%endif%}
+                 
+              </div>
+                {%endif%}
+                {%empty%}
+
+
+              {%for i in notes%}
+
+              {%if i.notes_name == request.session.note%}
+              <div class="list-group-item list-group-item-action flex-column align-items-start active mb-3">
+              <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}} " style="text-decoration:none" class="text-dark">
+                
+                <div class="d-flex w-100 justify-content-between ">
+
+                  <h5 class="mb-1">{{i.notes_name}}</h5>
+                  <small>{{i.notes_created_on}}</small>
+                  
+                </div>
+                <p class="mb-1">{{i.notes_text|truncatechars:80}}</p>
+                
+                <small>last modified : {{i.notes_last_modified}}</small>
+              </a>
+              
+              {% if i.bookmark_notes %}
+              <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(27,226,107)"></span></a>
+               {%else%}
+               <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(23, 25, 24)"></span></a>
+               {%endif%}
+               
+
+            </div>
+              {%else%}
+
+              <div class="list-group-item list-group-item-action flex-column align-items-start  mb-3">
+                <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}}" style="text-decoration:none" class="text-dark">
+                  
+                  <div class="d-flex w-100 justify-content-between ">
+                    <h5 class="mb-1">{{i.notes_name}}</h5>
+                    <small>{{i.notes_created_on}}</small>
+                  </div>
+                  <p class="mb-1">{{i.notes_text|truncatechars:80}}</p>
+                  <small>last modified : {{i.notes_last_modified}}</small>
+                
+                </a>
+                          {% if i.bookmark_notes %}
+                         <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(27,226,107)"></span></a>
+                          {%else%}
+                          <a href="/notes/bookmark/{{i.notes_slug}}"><span class="fa fa-star" style="color:rgb(23, 25, 24)"></span></a>
+                          {%endif%}
+                          
+
+              </div>
+
+                      
+                {%endif%}
+                {%endfor%}
+
+                {%endfor%}
+
+
+              </div>
+
+
+        </div>
+
+
+        <div class="col">
+        <header>
+          {{request.session.note}}
+        
+                <nav class="navbar navbar-expand-lg navbar-light bg-black justify-content-between">
+                    <a class="navbar-brand text-white" href="#">from {{request.session.notebook}}</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                  
+                   
+                      <form class="form-inline my-2 my-lg-0" action="/notes/{{request.session.notebook}}" method="POST">
+                        {%csrf_token%}
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                      </form>
+                    
+                    
+                
+                        </nav>
+
+                        <button type="button" class="btn btn-success float-right mt-2 mr-3" onclick="savefunction()">Save <div class="spinner-grow spinner-grow-sm text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div></button>
+
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary float-right mt-2 mr-1" data-toggle="modal" data-target="#exampleModal1">
+                            Attachments
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                      <form action="{%url 'attachments'%}" method="POST" enctype="multipart/form-data">
+                                        {%csrf_token%}
+                                        <div class="form-group">
+                                          <label for="attach">Attachments..</label>
+                                          <input name="attach" type="file" id="attach">
+                                        </div>
+                           
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                      </form>
+
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </header>
+
+                    <hr class="bg-white mt-5" style="width:90%;">
+
+                    <form action="{%url 'tags'%}" method="POST" >
+                      {%csrf_token%}
+                     
+                      <input name="tags" id="tags" style="width:88px; border-radius:8px; text-align:center" placeholder="tags.." >
+                      <button type="submit" id="tagbtn" style="visibility:hidden"></button>
+                    </form>
+
+                    {%for i in request.session.tags%}
+                    
+                    <span class="badge badge-pill badge-primary">{{i}} <a href="{%url 'delete_tag'%}?delete_tag={{i}}"><button style="background-color:transparent;border:none;">X</button></a></span>
+
+                    {%endfor%}
+
+                    <div class="mt-3"></div>
+                   
+
+                    <form action="{%url 'content'%}" method="POST">
+                        {%csrf_token%}
+                        <textarea id="mytextarea" name="mytextarea">{{content.notes_text}}</textarea>
+                        <button type="submit" id="savebtn" style="visibility:hidden"></button>
+                    </form>
+
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="col">
+                          {%for i in attach%}
+                            <a href="{{i.file.url}}" download><span class="badge badge-pill badge-primary">{{i.file.name}}</span> </a> <a href="{%url 'delete_file'%}?delete_file={{i.file.name}}"><button style="background-color:transparent;border:none;" class="text-white">X</button></a>
+                          {%endfor%}
+                        </div>
+                      </div>
+                    </div>
+
+      
+                    
+                    
+                 </div>
+                 
+            </div>
+           
+        </div>
+
+
+
+
+{%endblock%}

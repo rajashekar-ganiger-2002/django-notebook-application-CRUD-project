@@ -1,0 +1,115 @@
+{%extends 'home.html'%}
+
+{%block mainblk%}
+
+
+<div class="container-fluid h-60 mt-1 mr-5">
+  <div class="row h-100">
+    <div class="col-8 bg-dark mt-5 mr-5 ml-4 round">
+      <h5 class="mt-2 text-white"> Recent updated notes....</h5>
+
+      <div class="container-fluid">
+        <div class="scrolling-wrapper row flex-row flex-nowrap mt-4 pb-4 pt-2">
+      {%for i in notes%}
+          <div class="col-4 ml-0 mr-5">
+        
+            <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}} " style="text-decoration:none" class="text-dark">
+          <div class="card" style="width: 18rem; height:22rem">
+            <div class="card-body">
+              <h5 class="card-title">{{i.notes_name}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">last modified : {{i.notes_last_modified}}</h6>
+              <p class="card-text">{{i.notes_text|truncatechars:100}}</p>
+              <a  class="card-link">created on : {{i.notes_created_on}}</a>
+            </div>
+            </div>
+          </div>
+        </a>
+
+      {%endfor%}
+        </div>
+        </div>
+    </div>
+    
+  
+
+
+
+
+    <div class="col-3 ml-0 mt-5  bg-dark round">
+      <h5 class="mt-2 text-white"> Tasks</h5>
+      <div class="list-group mt-4">
+  
+        {%for i in task%}
+          <a href="{%url 'task'%}" class="list-group-item list-group-item-action mb-1"><div>{{i.task_name}} </div><span class="badge badge-pill badge-primary">{{i.task_date}}</span>
+          </a>
+       
+    
+        {%endfor%}
+       
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+<div class="container-fluid h-30 bg-dark mt-4 ml-4 round" style="width:74em">
+  <div class="row h-100">
+    <div class="col-12 pt-2 ml-3 ">
+      <form action="{%url 'home' %}" method="POST">
+        {%csrf_token%}
+        <a><button type="submit" name="submit_btn" value="all_notes" style="border:none;background:none; text-decoration:none;color:white"
+          onmouseover="this.style.textDecoration='underline';"
+          onmouseout="this.style.textDecoration='none';">all_notes</button></a>
+
+          <a><button type="submit" name="submit_btn" value="fav" style="border:none;background:none; text-decoration:none;color:white"
+            onmouseover="this.style.textDecoration='underline';"
+            onmouseout="this.style.textDecoration='none';">favourites</button></a>
+      </form>
+    </div>
+
+    <div class="col-12 ml-3 ">
+
+      <div class="scrolling-wrapper row flex-row flex-nowrap mt-2 pb-3 pt-2 mr-0 ml-0 pr-0 pl-0">
+          {%for i in variable%}
+          <a href="/notes/{{request.session.notebook}}/content/{{i.notes_slug}} " style="text-decoration:none" class="text-dark">
+            <div class="col-4">
+              <div class="card" style="width: 18rem; height:22rem">
+                <div class="card-body">
+                  <h5 class="card-title">{{i.notes_name}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">last modified : {{i.book_last_modified}}</h6>
+                  <p class="card-text">{{i.notes_text|truncatechars:100}}</p>
+        
+                  <a href="#" class="card-link">created on : {{i.notes_created_on}}</a>
+                </div>
+              </div>
+            </div>
+          </a>
+        {%empty%}
+        <div class="jumbotron jumbotron-fluid bg-dark ml-auto mr-auto">
+          <div class="container">
+            <h1 class="display-4 text-white">No notes to display!</h1>
+            <p class="lead text-white">Your favorites are now displayed here for easy access</p>
+          </div>
+        </div>
+
+        {%endfor%}
+
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+{%endblock%}
+
+
